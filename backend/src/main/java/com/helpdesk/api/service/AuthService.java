@@ -1,5 +1,7 @@
 package com.helpdesk.api.service;
 
+import com.helpdesk.api.dto.AuthResponse;
+import com.helpdesk.api.dto.LoginRequest;
 import com.helpdesk.api.dto.RegisterRequest;
 import com.helpdesk.api.model.User;
 import com.helpdesk.api.model.UserRole;
@@ -32,14 +34,19 @@ public class AuthService {
         return userRepository.save(newUser);
     }
 
-    public String login(String email, String password) {
+    public AuthResponse login(LoginRequest request) {
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
-        var user = userRepository.findByEmail(email)
+        var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
 
-        return "TOKEN_EM_BREVE";
+        var jwtToken = jwtService.generateToken(user);
+
+        return AuthResponse.builder()
+                .token(jwtToken)
+                .name(user.getName())
+                .build();
     }
 }

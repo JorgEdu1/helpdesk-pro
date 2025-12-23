@@ -1,5 +1,7 @@
 package com.helpdesk.api.controller;
 
+import com.helpdesk.api.dto.AuthResponse;
+import com.helpdesk.api.dto.LoginRequest;
 import com.helpdesk.api.dto.RegisterRequest;
 import com.helpdesk.api.model.User;
 import com.helpdesk.api.service.AuthService;
@@ -16,13 +18,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public String login() {
-        return "Login Endpoint Liberado!";
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody @Valid RegisterRequest request) {
-        var newUser = authService.register(request);
-        return ResponseEntity.ok(newUser);
+        return ResponseEntity.ok(authService.register(request));
     }
 }
