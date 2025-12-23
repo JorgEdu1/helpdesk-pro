@@ -15,25 +15,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "comments")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private String name;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String content;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    @ManyToOne
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private Ticket ticket;
 
-    @Column(nullable = false)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
